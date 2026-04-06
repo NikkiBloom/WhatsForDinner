@@ -43,8 +43,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF8EBEB)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        horizontalAlignment = Alignment.CenterHorizontally)
+    {
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
