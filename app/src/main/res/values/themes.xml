@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.WhatsForDinner" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.WhatsForDinner" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Match your app's background color -->
+        <item name="android:windowBackground">#F8EBEB</item>
+        <item name="android:statusBarColor">#F8EBEB</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
 </resources>
