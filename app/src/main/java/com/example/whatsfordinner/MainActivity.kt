@@ -10,32 +10,45 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +59,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -73,7 +87,7 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             RecipeDatabase::class.java, "recipe-database"
         ).build()
-        val dao = db.RecipeDAO()
+        val dao = db.recipeDAO()
         val viewModelFactory = RecipeViewModelFactory(dao)
 
         enableEdgeToEdge()
@@ -86,7 +100,11 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "main") {
                     composable("main") {
                         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            MainScreen(navController = navController, modifier = Modifier.padding(innerPadding))
+                            MainScreen(
+                                navController = navController,
+                                recipeViewModel = recipeViewModel,
+                                modifier = Modifier.padding(innerPadding)
+                            )
                         }
                     }
                     composable("recipes") {
@@ -94,6 +112,18 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("newRecipe") {
                         NewRecipeScreen(navController, recipeViewModel = recipeViewModel)
+                    }
+
+                    composable(
+                        route = "fullRecipe/{recipeId}",
+                        arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val recipeId = backStackEntry.arguments!!.getInt("recipeId")
+                        FullRecipeView(
+                            navController = navController,
+                            recipeId = recipeId,
+                            recipeViewModel = recipeViewModel
+                        )
                     }
 
                     composable(
@@ -106,6 +136,10 @@ class MainActivity : ComponentActivity() {
                             recipeId = recipeId,
                             recipeViewModel = recipeViewModel
                         )
+                    }
+
+                    composable("recipeTinder") {
+                        RecipeTinderScreen(recipeViewModel, navController)
                     }
 
                 }
@@ -126,7 +160,7 @@ class RecipeViewModelFactory(private val dao: RecipeDAO) : ViewModelProvider.Fac
 }
 
 @Composable
-fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -167,7 +201,10 @@ fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = {
+                    recipeViewModel.onSearchQueryChange("")
+                    navController.navigate("recipeTinder")
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
             ) {
                 Text("I Don't Know (Random)")
@@ -274,6 +311,7 @@ fun RecipeBook(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            //todo
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = recipeViewModel::onSearchQueryChange,
@@ -593,3 +631,215 @@ fun EditRecipeScreen(
     }
 }
 
+// navigable screen to view a full recipe
+@Composable
+fun FullRecipeView(
+    navController: NavController,
+    recipeId: Int,
+    recipeViewModel: RecipeViewModel
+) {
+    val recipe by recipeViewModel
+        .getRecipe(recipeId)
+        .collectAsState(initial = null)
+
+    recipe?.let { existing ->
+
+        val scrollState = rememberScrollState()
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF8EBEB))
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(24.dp)
+            ) {
+
+                existing.imageUri?.let { uri ->
+                    Image(
+                        painter = rememberAsyncImagePainter(Uri.parse(uri)),
+                        contentDescription = existing.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(3f / 4f),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                Text(
+                    text = existing.title,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Ingredients",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = existing.ingredients.joinToString(", "),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Flavor Profile",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = existing.tags.joinToString(", "),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Instructions",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = existing.instructions,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // Space so content doesn't hide behind button
+                Spacer(modifier = Modifier.height(80.dp))
+            }
+
+            Button(
+                onClick = { navController.popBackStack() },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565)),
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            ) {
+                Text("Back")
+            }
+        }
+    }
+}
+
+@Composable
+fun TinderCard(recipe: RecipeTuple) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+
+        Column(modifier = Modifier.padding(16.dp)) {
+
+            recipe.imageUri?.let { uri ->
+                Image(
+                    painter = rememberAsyncImagePainter(uri),
+                    contentDescription = recipe.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(3f / 4f),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            Text(
+                text = recipe.title,
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 25.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun TinderButtons(
+    onReject: () -> Unit,
+    onAccept: () -> Unit
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+        IconButton(
+            onClick = onReject,
+            modifier = Modifier
+                .size(64.dp)
+                .background(Color(0xFFFFE0E0), CircleShape)
+        ) {
+            Icon(Icons.Default.Close, contentDescription = "Skip")
+        }
+
+        IconButton(
+            onClick = onAccept,
+            modifier = Modifier
+                .size(64.dp)
+                .background(Color(0xFFE0F2F1), CircleShape)
+        ) {
+            Icon(Icons.Default.Check, contentDescription = "Open")
+        }
+    }
+}
+
+@Composable
+fun RecipeTinderScreen(
+    recipeViewModel: RecipeViewModel,
+    navController: NavController
+) {
+    val recipes by recipeViewModel.filteredRecipes.collectAsState()
+    var shuffledRecipes by remember { mutableStateOf<List<RecipeTuple>>(emptyList()) }
+    var currentIndex by remember { mutableStateOf(0) }
+
+    // Shuffle ONCE when recipes load
+    LaunchedEffect(recipes) {
+        if (shuffledRecipes.isEmpty() && recipes.isNotEmpty()) {
+            shuffledRecipes = recipes.shuffled()
+            currentIndex = 0
+        }
+    }
+
+    val currentRecipe = shuffledRecipes.getOrNull(currentIndex)
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (currentRecipe == null) {
+            Text(
+                text = "Out of recipes 😅",
+                style = MaterialTheme.typography.titleMedium
+            )
+        } else {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                TinderCard(
+                    recipe = currentRecipe
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TinderButtons(
+                    onReject = { currentIndex++ },
+                    onAccept = {
+                        navController.navigate("fullRecipe/${currentRecipe.id}")
+                    }
+                )
+            }
+        }
+
+        // Back button
+        Button(
+            onClick = { navController.popBackStack() },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565)),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+        ) {
+            Text("Back")
+        }
+    }
+}
