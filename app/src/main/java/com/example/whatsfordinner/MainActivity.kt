@@ -39,24 +39,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsfordinner.ui.theme.Recipe
+import com.example.whatsfordinner.ui.theme.RecipeDAO
+import com.example.whatsfordinner.ui.theme.RecipeDatabase
+import com.example.whatsfordinner.ui.theme.RecipeTuple
 import com.example.whatsfordinner.ui.theme.RecipeViewModel
 import com.example.whatsfordinner.ui.theme.WhatsForDinnerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            RecipeDatabase::class.java, "recipe-database"
+        ).build()
+        val dao = db.RecipeDAO()
+        val viewModelFactory = RecipeViewModelFactory(dao)
+
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             WhatsForDinnerTheme {
                 val navController = rememberNavController()
+                val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory)
+
                 NavHost(navController = navController, startDestination = "main") {
                     composable("main") {
                         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -64,14 +80,24 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable("recipes") {
-                        RecipeBook(navController, recipeViewModel = viewModel())
+                        RecipeBook(navController, recipeViewModel = recipeViewModel)
                     }
                     composable("newRecipe") {
-                        NewRecipeScreen(navController)
+                        NewRecipeScreen(navController, recipeViewModel = recipeViewModel)
                     }
                 }
             }
         }
+    }
+}
+
+class RecipeViewModelFactory(private val dao: RecipeDAO) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(RecipeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RecipeViewModel(dao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 
@@ -138,7 +164,7 @@ fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
 
 // "short display" of recipes for recipe book screen
 @Composable
-fun RecipeCard(recipe: Recipe) {
+fun RecipeCard(recipe: RecipeTuple) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -165,7 +191,7 @@ fun RecipeCard(recipe: Recipe) {
                 style = MaterialTheme.typography.titleMedium
             )
 
-            if (recipe.tags.isNotEmpty()) {
+            if (recipe.tags?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = recipe.tags.joinToString(" • "),
@@ -175,10 +201,12 @@ fun RecipeCard(recipe: Recipe) {
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = recipe.ingredients.joinToString(", "),
-                style = MaterialTheme.typography.bodySmall
-            )
+            recipe.ingredients?.let {
+                Text(
+                    text = it.joinToString(", "),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     }
 }
@@ -191,6 +219,7 @@ fun RecipeBook(
     recipeViewModel: RecipeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    //todo?
     val recipes by recipeViewModel.filteredRecipes.collectAsState()
     val searchQuery by recipeViewModel.searchQuery.collectAsState()
 
