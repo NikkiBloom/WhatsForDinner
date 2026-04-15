@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -44,6 +45,17 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
                 instructions = instructions
             )
             dao.insertRecipe(recipe)
+        }
+    }
+
+    fun getRecipe(recipeId: Int): Flow<Recipe?> =
+        flow {
+            emit(dao.getRecipeById(recipeId))
+        }
+
+    fun updateRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            dao.updateRecipe(recipe)
         }
     }
 

@@ -19,6 +19,9 @@ interface RecipeDAO {
     @Delete
     suspend fun deleteRecipe(recipe: Recipe)
 
+    @Query("SELECT rowid, * FROM RecipeDatabase WHERE rowid = :id")
+    suspend fun getRecipeById(id: Int): Recipe
+
     @Query("SELECT rowid AS id, * FROM RecipeDatabase")
     fun getAllRecipesFlow(): Flow<List<RecipeTuple>>
 

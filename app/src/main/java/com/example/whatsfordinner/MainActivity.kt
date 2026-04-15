@@ -1,21 +1,28 @@
 package com.example.whatsfordinner
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -37,15 +44,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.room.Room
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsfordinner.ui.theme.Recipe
@@ -85,12 +95,26 @@ class MainActivity : ComponentActivity() {
                     composable("newRecipe") {
                         NewRecipeScreen(navController, recipeViewModel = recipeViewModel)
                     }
+
+                    composable(
+                        route = "editRecipe/{recipeId}",
+                        arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val recipeId = backStackEntry.arguments!!.getInt("recipeId")
+                        EditRecipeScreen(
+                            navController = navController,
+                            recipeId = recipeId,
+                            recipeViewModel = recipeViewModel
+                        )
+                    }
+
                 }
             }
         }
     }
 }
 
+// needed to connect view model and DAO
 class RecipeViewModelFactory(private val dao: RecipeDAO) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RecipeViewModel::class.java)) {
@@ -164,48 +188,53 @@ fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
 
 // "short display" of recipes for recipe book screen
 @Composable
-fun RecipeCard(recipe: RecipeTuple) {
+fun RecipeCard(recipe: RecipeTuple, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp),
+            .padding(bottom = 12.dp)
+            .clickable{ onClick() },
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Row(modifier = Modifier.padding(16.dp).height(IntrinsicSize.Min)) {
 
             recipe.imageUri?.let { uri ->
                 Image(
                     painter = rememberAsyncImagePainter(uri),
                     contentDescription = recipe.title,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp)
+                        .width(90.dp)
+                        .fillMaxHeight(),
+                    contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            Text(
-                text = recipe.title,
-                style = MaterialTheme.typography.titleMedium
-            )
+            Column(modifier = Modifier.padding(16.dp)) {
 
-            if (recipe.tags?.isNotEmpty() == true) {
-                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = recipe.tags.joinToString(" • "),
-                    style = MaterialTheme.typography.bodySmall
+                    text = recipe.title,
+                    style = MaterialTheme.typography.titleMedium
                 )
-            }
 
-            Spacer(modifier = Modifier.height(6.dp))
+                if (recipe.tags?.isNotEmpty() == true) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = recipe.tags.joinToString(" • "),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
 
-            recipe.ingredients?.let {
-                Text(
-                    text = it.joinToString(", "),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Spacer(modifier = Modifier.height(6.dp))
+
+                recipe.ingredients?.let {
+                    Text(
+                        text = it.joinToString(", "),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }
@@ -219,7 +248,7 @@ fun RecipeBook(
     recipeViewModel: RecipeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    //todo?
+
     val recipes by recipeViewModel.filteredRecipes.collectAsState()
     val searchQuery by recipeViewModel.searchQuery.collectAsState()
 
@@ -264,7 +293,9 @@ fun RecipeBook(
                     )
                 }
                 items(recipes) { recipe ->
-                    RecipeCard(recipe)
+                    RecipeCard(recipe) {
+                        navController.navigate("editRecipe/${recipe.id}")
+                    }
                 }
             }
         }
@@ -316,7 +347,15 @@ fun NewRecipeScreen(
 ) {
     var title by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
+    var tags by remember { mutableStateOf("") }
     var instructions by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        imageUri = uri
+    }
 
     Box(
         modifier = Modifier
@@ -350,10 +389,41 @@ fun NewRecipeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            imageUri?.let {
+                Image(
+                    painter = rememberAsyncImagePainter(it),
+                    contentDescription = "Recipe Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // image select button
+            Button(
+                onClick = { imagePicker.launch("image/*") },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+            ) {
+                Text("Pick Image")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             OutlinedTextField(
                 value = ingredients,
                 onValueChange = { ingredients = it },
                 label = { Text("Ingredients (comma-separated)") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = tags,
+                onValueChange = { tags = it },
+                label = { Text("Flavor Profile (comma-separated)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -405,3 +475,121 @@ fun NewRecipeScreen(
         }
     }
 }
+
+@Composable
+fun EditRecipeScreen(
+    navController: NavController,
+    recipeId: Int,
+    recipeViewModel: RecipeViewModel
+) {
+    val recipe by recipeViewModel
+        .getRecipe(recipeId)
+        .collectAsState(initial = null)
+
+    recipe?.let { existing ->
+
+        var title by remember { mutableStateOf(existing.title) }
+        var ingredients by remember { mutableStateOf(existing.ingredients.joinToString(", ")) }
+        var tags by remember { mutableStateOf(existing.tags.joinToString(", ")) }
+        var instructions by remember { mutableStateOf(existing.instructions) }
+        var imageUri by remember { mutableStateOf(existing.imageUri?.let { Uri.parse(it) }) }
+
+        val imagePicker = rememberLauncherForActivityResult(
+            ActivityResultContracts.GetContent()
+        ) { uri ->
+            imageUri = uri
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Edit Recipe",
+                style = MaterialTheme.typography.displaySmall
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            imageUri?.let {
+                Image(
+                    painter = rememberAsyncImagePainter(it),
+                    contentDescription = "Recipe Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = { imagePicker.launch("image/*") },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+            ) {
+                Text("Change Image")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(title, { title = it }, label = { Text("Title") })
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                ingredients,
+                { ingredients = it },
+                label = { Text("Ingredients (comma-separated)") }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                tags,
+                { tags = it },
+                label = { Text("Flavor Profile (comma-separated)") },
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            OutlinedTextField(
+                instructions,
+                { instructions = it },
+                label = { Text("Instructions") },
+                minLines = 4
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    recipeViewModel.updateRecipe(
+                        existing.copy(
+                            title = title,
+                            imageUri = imageUri?.toString(),
+                            ingredients = ingredients
+                                .split(",")
+                                .map { it.trim() }
+                                .filter { it.isNotBlank() },
+                            tags = tags
+                                .split(",")
+                                .map { it.trim() }
+                                .filter { it.isNotBlank() },
+                            instructions = instructions
+                        )
+                    )
+                    navController.popBackStack()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+            ) {
+                Text("Save Changes")
+            }
+        }
+    }
+}
+
