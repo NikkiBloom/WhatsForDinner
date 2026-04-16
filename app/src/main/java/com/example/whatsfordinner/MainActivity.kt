@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                             MainScreen(
                                 navController = navController,
                                 recipeViewModel = recipeViewModel,
-                                modifier = Modifier.padding(innerPadding)
+                                //modifier = Modifier.padding(innerPadding)
                             )
                         }
                     }
@@ -478,7 +478,7 @@ fun NewRecipeScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {
+                onClick = { // todo
                     recipeViewModel.addRecipe(
                         title = title,
                         imageUri = null,
