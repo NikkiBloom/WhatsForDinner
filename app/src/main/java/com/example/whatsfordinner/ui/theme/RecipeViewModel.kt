@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -18,16 +19,50 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
+    private val _iHaveIngredients = MutableStateFlow<List<String>>(emptyList())
+    val iHaveIngredients: StateFlow<List<String>> = _iHaveIngredients
+
+    private val _iWantTags = MutableStateFlow<List<String>>(emptyList())
+    val iWantTags: StateFlow<List<String>> = _iWantTags
+
     // Filtered recipes based on ingredient search from Room
-    val filteredRecipes: StateFlow<List<RecipeTuple>> = _searchQuery
-        .flatMapLatest { query ->
-            if (query.isBlank()) {
-                dao.getAllRecipesFlow()
-            } else {
-                dao.searchIngredientsFlow("%$query%")
+    val filteredRecipes: StateFlow<List<RecipeTuple>> = combine(_searchQuery, _iHaveIngredients) { query, iHave ->
+        query to iHave
+    }.flatMapLatest { (query: String, iHave: List<String>) ->
+        if (iHave.isNotEmpty()) {
+            dao.getAllRecipesFlow().map { allRecipes: List<RecipeTuple> ->
+                allRecipes.mapNotNull { recipe ->
+                    val recipeIngredients = recipe.ingredients ?: emptyList()
+                    val matchCount = iHave.count { have ->
+                        recipeIngredients.any { it.contains(have, ignoreCase = true) }
+                    }
+                    if (matchCount > 0) {
+                        recipe to matchCount
+                    } else {
+                        null
+                    }
+                }
+                .sortedByDescending { it.second }
+                .map { it.first }
             }
         }
+        else if (query.isBlank()) {
+            dao.getAllRecipesFlow()
+        } else {
+            dao.searchIngredientsFlow("%$query%")
+        }
+    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun setIHaveIngredients(ingredients: List<String>) {
+        _iHaveIngredients.value = ingredients
+        _searchQuery.value = ""
+    }
+
+    fun clearSearch() {
+        _searchQuery.value = ""
+        _iHaveIngredients.value = emptyList()
+    }
 
     fun addRecipe(
         title: String,

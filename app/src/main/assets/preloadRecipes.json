@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Spaghetti",
+    "imageUri": null,
+    "tags": ["Comfort", "Italian"],
+    "ingredients": ["Marinara Sauce", "Noodles", "Ground Beef"],
+    "instructions": "1. Boil pasta. 2. Season and cook ground beef in a pan. 3. Combine all."
+  },
+  {
+    "title": "Chicken Stir Fry",
+    "imageUri": null,
+    "tags": ["Asian", "Healthy", "Fast"],
+    "ingredients": ["Chicken Breast", "Broccoli", "Soy Sauce", "Ginger", "Garlic", "Sesame Oil"],
+    "instructions": "1. Slice chicken and veggies. 2. Sauté chicken until browned. 3. Add veggies and sauce. 4. Serve over rice."
+  },
+  {
+    "title": "Avocado Toast",
+    "imageUri": null,
+    "tags": ["Breakfast", "Vegetarian"],
+    "ingredients": ["Sourdough Bread", "Avocado", "Lemon Juice", "Red Pepper Flakes", "Salt"],
+    "instructions": "1. Toast bread. 2. Mash avocado with lemon and salt. 3. Spread on toast and top with flakes."
+  }
+]

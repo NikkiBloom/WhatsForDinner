@@ -71,6 +71,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsfordinner.ui.theme.Recipe
 import com.example.whatsfordinner.ui.theme.RecipeDAO
@@ -78,6 +80,8 @@ import com.example.whatsfordinner.ui.theme.RecipeDatabase
 import com.example.whatsfordinner.ui.theme.RecipeTuple
 import com.example.whatsfordinner.ui.theme.RecipeViewModel
 import com.example.whatsfordinner.ui.theme.WhatsForDinnerTheme
+import org.json.JSONArray
+import java.nio.charset.Charset
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +90,42 @@ class MainActivity : ComponentActivity() {
         val db = Room.databaseBuilder(
             applicationContext,
             RecipeDatabase::class.java, "recipe-database"
-        ).build()
+
+        // pre-load from json file:
+        ).addCallback(object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                try {
+                    val inputStream = applicationContext.assets.open("preloadRecipes.json")
+                    val size = inputStream.available()
+                    val buffer = ByteArray(size)
+                    inputStream.read(buffer)
+                    inputStream.close()
+                    val jsonString = String(buffer, Charset.forName("UTF-8"))
+                    val jsonArray = JSONArray(jsonString)
+
+                    for (i in 0 until jsonArray.length()) {
+                        val obj = jsonArray.getJSONObject(i)
+                        val title = obj.getString("title")
+                        val tags = obj.getJSONArray("tags").let { arr ->
+                            List(arr.length()) { arr.getString(it) }.joinToString(",")
+                        }
+                        val ingredients = obj.getJSONArray("ingredients").let { arr ->
+                            List(arr.length()) { arr.getString(it) }.joinToString(",")
+                        }
+                        val instructions = obj.getString("instructions")
+
+                        db.execSQL(
+                            "INSERT INTO RecipeDatabase (title, tags, ingredients, instructions) VALUES (?, ?, ?, ?)",
+                            arrayOf(title, tags, ingredients, instructions)
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }).build()
+
         val dao = db.recipeDAO()
         val viewModelFactory = RecipeViewModelFactory(dao)
 
@@ -99,19 +138,24 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "main") {
                     composable("main") {
-                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            MainScreen(
-                                navController = navController,
-                                recipeViewModel = recipeViewModel,
-                                //modifier = Modifier.padding(innerPadding)
-                            )
-                        }
+                        MainScreen(
+                            navController = navController,
+                            recipeViewModel = recipeViewModel,
+                        )
                     }
                     composable("recipes") {
                         RecipeBook(navController, recipeViewModel = recipeViewModel)
                     }
                     composable("newRecipe") {
                         NewRecipeScreen(navController, recipeViewModel = recipeViewModel)
+                    }
+
+                    composable("have"){
+                        IHaveScreen(navController = navController, recipeViewModel = recipeViewModel)
+                    }
+
+                    composable("crave"){
+                        ICraveScreen(navController = navController, recipeViewModel = recipeViewModel)
                     }
 
                     composable(
@@ -183,7 +227,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
             Spacer(modifier = Modifier.height(150.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = { navController.navigate("crave") },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
             ) {
                 Text("I'm Craving...")
@@ -192,7 +236,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = { navController.navigate("have") },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
             ) {
                 Text("I Have...")
@@ -202,7 +246,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
 
             Button(
                 onClick = {
-                    recipeViewModel.onSearchQueryChange("")
+                    recipeViewModel.clearSearch()
                     navController.navigate("recipeTinder")
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
@@ -650,14 +694,17 @@ fun FullRecipeView(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF8EBEB))
+                .padding(24.dp)
         ) {
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
-                    .padding(24.dp)
+                    .padding(12.dp)
             ) {
+
+                Spacer(modifier = Modifier.height(24.dp))
 
                 existing.imageUri?.let { uri ->
                     Image(
@@ -792,18 +839,24 @@ fun RecipeTinderScreen(
     navController: NavController
 ) {
     val recipes by recipeViewModel.filteredRecipes.collectAsState()
-    var shuffledRecipes by remember { mutableStateOf<List<RecipeTuple>>(emptyList()) }
+    val iHaveIngredients by recipeViewModel.iHaveIngredients.collectAsState()
+    
+    var displayRecipes by remember { mutableStateOf<List<RecipeTuple>>(emptyList()) }
     var currentIndex by remember { mutableStateOf(0) }
 
-    // Shuffle ONCE when recipes load
+    // Update displayRecipes when recipes change
     LaunchedEffect(recipes) {
-        if (shuffledRecipes.isEmpty() && recipes.isNotEmpty()) {
-            shuffledRecipes = recipes.shuffled()
-            currentIndex = 0
+        if (iHaveIngredients.isNotEmpty()) {
+            // Respect the order from ViewModel (sorted by match count)
+            displayRecipes = recipes
+        } else {
+            // Randomize if not an "I Have" search
+            displayRecipes = recipes.shuffled()
         }
+        currentIndex = 0
     }
 
-    val currentRecipe = shuffledRecipes.getOrNull(currentIndex)
+    val currentRecipe = displayRecipes.getOrNull(currentIndex)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -842,4 +895,80 @@ fun RecipeTinderScreen(
             Text("Back")
         }
     }
+}
+
+@Composable
+fun IHaveScreen(
+    recipeViewModel: RecipeViewModel = viewModel(),
+    navController: NavController,
+){
+    var ingredients by remember { mutableStateOf("") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF8EBEB))
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(60.dp))
+
+            Text(
+                text = "I Have...",
+                style = MaterialTheme.typography.displaySmall
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            OutlinedTextField(
+                value = ingredients,
+                onValueChange = { ingredients = it },
+                label = { Text("Ingredients (comma-separated)") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            
+            Button(
+                onClick = {
+                    val list = ingredients.split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                    recipeViewModel.setIHaveIngredients(list)
+                    navController.navigate("recipeTinder")
+                          },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB16565)
+                ),
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Text("Find My Dinner")
+            }
+        }
+
+            // back button
+        Button(
+            onClick = { navController.popBackStack() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFB16565)
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+        ) {
+            Text("Back")
+        }
+    }
+}
+
+@Composable
+fun ICraveScreen(
+    recipeViewModel: RecipeViewModel,
+    navController: NavController){
+
 }
