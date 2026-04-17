@@ -19,5 +19,264 @@
     "tags": ["Breakfast", "Vegetarian"],
     "ingredients": ["Sourdough Bread", "Avocado", "Lemon Juice", "Red Pepper Flakes", "Salt"],
     "instructions": "1. Toast bread. 2. Mash avocado with lemon and salt. 3. Spread on toast and top with flakes."
+  },
+  {
+    "title": "Vegetable Venison or Beef Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup"
+    ],
+    "ingredients": [
+      "1 lb ground venison or beef",
+      "Water",
+      "Tomatoes",
+      "Onion",
+      "Celery",
+      "Carrots",
+      "Beef bouillon",
+      "Barley",
+      "Pepper",
+      "Red pepper flakes"
+    ],
+    "instructions": "Brown meat in a stockpot. Add water and tomatoes. Chop and add vegetables, bouillon, spices, and barley. Bring to a boil, reduce heat, and simmer about 30 minutes until vegetables are tender."
+  },
+  {
+    "title": "Roasted Acorn Squash Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Acorn squash",
+      "Butter",
+      "Celery",
+      "Carrots",
+      "Onion",
+      "Chicken or vegetable broth",
+      "Heavy cream",
+      "Lemon juice"
+    ],
+    "instructions": "Roast halved squash until soft. Saut\u00e9 celery, carrots, and onion in butter. Scoop squash flesh into pan with broth and simmer 25\u201330 minutes. Blend until smooth, then stir in cream and lemon juice and season."
+  },
+  {
+    "title": "Garden Vietnamese Ginger Noodle Soup (Chicken Pho)",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Asian"
+    ],
+    "ingredients": [
+      "Chicken thighs",
+      "Carrots",
+      "Broccoli",
+      "Vermicelli noodles",
+      "Onion",
+      "Garlic",
+      "Ginger",
+      "Star anise",
+      "Cloves",
+      "Broth",
+      "Soy sauce",
+      "Lime juice",
+      "Cilantro",
+      "Basil"
+    ],
+    "instructions": "Saut\u00e9 onion and garlic in oil. Brown chicken with carrots and broccoli. Add broth, soy sauce, lime juice, ginger, and whole spices and simmer about 30 minutes. Cook noodles separately. Serve soup over noodles with herbs and lime."
+  },
+  {
+    "title": "Zucchini and Brown Rice Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Zucchini",
+      "Spinach or Swiss chard",
+      "Brown rice",
+      "Onion",
+      "Butter",
+      "Chicken or vegetable broth",
+      "Salt",
+      "Pepper"
+    ],
+    "instructions": "Cook rice in broth until tender. Saut\u00e9 onion in butter, add zucchini briefly, then greens until wilted. Stir vegetable mixture into rice, season, and serve warm."
+  },
+  {
+    "title": "Lentil and Chicken Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Gluten-Free"
+    ],
+    "ingredients": [
+      "Chicken breast",
+      "Brown lentils",
+      "Tomatoes",
+      "Onion",
+      "Garlic",
+      "Chicken broth",
+      "Oil",
+      "Cilantro"
+    ],
+    "instructions": "Cook tomatoes, onion, and garlic in pot. Add oil, broth, and chicken and bring to a boil. Add lentils and simmer until lentils are tender and chicken cooked. Shred chicken before serving."
+  },
+  {
+    "title": "Veggie Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Vegan"
+    ],
+    "ingredients": [
+      "Mixed vegetables",
+      "Broth or water",
+      "Salt",
+      "Pepper",
+      "Herbs"
+    ],
+    "instructions": "Chop vegetables and roast until soft. Transfer to pot with broth or water. Blend if desired and season to taste."
+  },
+  {
+    "title": "Butternut Squash Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Butternut squash",
+      "Apple",
+      "Sweet onion",
+      "Vegetable broth",
+      "Milk",
+      "Curry powder",
+      "Cinnamon",
+      "Salt",
+      "Oil"
+    ],
+    "instructions": "Roast seasoned squash until tender. Saut\u00e9 apple and onion in oil. Add squash, broth, and milk, simmer 20 minutes, then blend until smooth."
+  },
+  {
+    "title": "Fresh Tomato Soup",
+    "imageUri": null,
+    "tags": [
+      "Soup",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Tomatoes",
+      "Onion",
+      "Leeks",
+      "Carrots",
+      "Celery",
+      "Garlic",
+      "Broth",
+      "Flour",
+      "Oil",
+      "Parsley",
+      "Salt",
+      "Pepper"
+    ],
+    "instructions": "Saut\u00e9 onions and leeks, add vegetables and cook until thick. Stir in flour, then add broth and simmer. Add parsley and season; blend if desired."
+  },
+  {
+    "title": "Summer Beet Salad",
+    "imageUri": null,
+    "tags": [
+      "Salad",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Beets",
+      "Walnuts",
+      "Orange juice",
+      "Vinegar",
+      "Olive oil",
+      "Scallions",
+      "Blue cheese or feta",
+      "Salt",
+      "Pepper"
+    ],
+    "instructions": "Boil beets until tender, peel and slice. Toast walnuts. Whisk dressing ingredients. Toss beets with dressing, walnuts, scallions, and cheese."
+  },
+  {
+    "title": "Three Bean Salad",
+    "imageUri": null,
+    "tags": [
+      "Salad",
+      "Vegan"
+    ],
+    "ingredients": [
+      "Yellow wax beans",
+      "Green beans",
+      "Kidney beans",
+      "Onion",
+      "Green pepper",
+      "Cauliflower",
+      "Vinegar",
+      "Sugar",
+      "Oil"
+    ],
+    "instructions": "Drain beans and combine with chopped vegetables. Whisk vinegar, sugar, and oil and pour over salad. Toss well and chill or serve at room temperature."
+  },
+  {
+    "title": "Tabbouli",
+    "imageUri": null,
+    "tags": [
+      "Salad",
+      "Vegan"
+    ],
+    "ingredients": [
+      "Bulgur wheat",
+      "Tomatoes",
+      "Parsley",
+      "Green onions",
+      "Lemon juice",
+      "Olive oil",
+      "Salt",
+      "Mint"
+    ],
+    "instructions": "Soak bulgur in hot water, then drain and squeeze dry. Mix vegetables with lemon juice and salt, add bulgur, chill, then stir in olive oil and mint before serving."
+  },
+  {
+    "title": "Quinoa Veggie Salad in a Pita",
+    "imageUri": null,
+    "tags": [
+      "Salad",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Cooked quinoa",
+      "Chickpeas",
+      "Green onion",
+      "Asparagus",
+      "Carrot",
+      "Bell pepper",
+      "Fresh herbs",
+      "Pita",
+      "Orange miso dressing"
+    ],
+    "instructions": "Cook quinoa if needed. Whisk dressing ingredients. Toss all vegetables and quinoa with dressing. Fill pita halves and serve."
+  },
+  {
+    "title": "Thai Cucumber Salad",
+    "imageUri": null,
+    "tags": [
+      "Salad",
+      "Vegetarian"
+    ],
+    "ingredients": [
+      "Cucumbers",
+      "Green onions",
+      "Peanuts",
+      "Rice vinegar",
+      "Sugar",
+      "Olive oil",
+      "Salt",
+      "Red pepper flakes"
+    ],
+    "instructions": "Whisk vinegar, sugar, oil, salt, and pepper flakes. Add sliced cucumbers, peanuts, and green onions. Toss and serve chilled."
   }
 ]
