@@ -213,6 +213,10 @@ class RecipeViewModelFactory(private val dao: RecipeDAO) : ViewModelProvider.Fac
 
 @Composable
 fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, modifier: Modifier = Modifier) {
+    // clear search queries when on main screen
+    recipeViewModel.setIHaveIngredients(emptyList())
+    recipeViewModel.setIHaveCravings(emptyList())
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -562,6 +566,7 @@ fun NewRecipeScreen(
     }
 }
 
+// navigable screen to edit a recipe
 @Composable
 fun EditRecipeScreen(
     navController: NavController,
@@ -776,6 +781,7 @@ fun FullRecipeView(
     }
 }
 
+// recipe cards for tinder screen
 @Composable
 fun TinderCard(recipe: RecipeTuple) {
     Card(
@@ -973,5 +979,66 @@ fun IHaveScreen(
 fun ICraveScreen(
     recipeViewModel: RecipeViewModel,
     navController: NavController){
+    var tags by remember { mutableStateOf("") }
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(60.dp))
+
+            Text(
+                text = "I'm Craving...",
+                style = MaterialTheme.typography.displaySmall
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            OutlinedTextField(
+                value = tags,
+                onValueChange = { tags = it },
+                label = { Text("Cravings (comma-separated)") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Button(
+                onClick = {
+                    val list = tags.split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                    recipeViewModel.setIHaveCravings(list)
+                    navController.navigate("recipeTinder")
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Text("Find My Dinner")
+            }
+        }
+
+        // back button
+        Button(
+            onClick = { navController.popBackStack() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+        ) {
+            Text("Back")
+        }
+    }
 }

@@ -19,25 +19,46 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
+    // searches INGREDIENTS
     private val _iHaveIngredients = MutableStateFlow<List<String>>(emptyList())
     val iHaveIngredients: StateFlow<List<String>> = _iHaveIngredients
 
-    private val _iWantTags = MutableStateFlow<List<String>>(emptyList())
-    val iWantTags: StateFlow<List<String>> = _iWantTags
+    // searches TAGS
+    private val _iHaveCravings = MutableStateFlow<List<String>>(emptyList())
+    val iWantTags: StateFlow<List<String>> = _iHaveCravings
 
-    // Filtered recipes based on ingredient search from Room
-    val filteredRecipes: StateFlow<List<RecipeTuple>> = combine(_searchQuery, _iHaveIngredients) { query, iHave ->
-        query to iHave
-    }.flatMapLatest { (query: String, iHave: List<String>) ->
-        if (iHave.isNotEmpty()) {
+    // Filtered recipes based on search, ingredients, or cravings
+    val filteredRecipes: StateFlow<List<RecipeTuple>> = combine(
+        _searchQuery,
+        _iHaveIngredients,
+        _iHaveCravings
+    ) { query, iHave, iCrave ->
+        Triple(query, iHave, iCrave)
+    }.flatMapLatest { (query, iHave, iCrave) ->
+        if (iHave.isNotEmpty() || iCrave.isNotEmpty()) {
             dao.getAllRecipesFlow().map { allRecipes: List<RecipeTuple> ->
                 allRecipes.mapNotNull { recipe ->
-                    val recipeIngredients = recipe.ingredients ?: emptyList()
-                    val matchCount = iHave.count { have ->
-                        recipeIngredients.any { it.contains(have, ignoreCase = true) }
+                    var matchCount = 0
+
+                    if (iHave.isNotEmpty()) {
+                        val recipeIngredients = recipe.ingredients?.map { it.replace(Regex("[0-9]"), "").trim() } ?: emptyList()
+                        matchCount += iHave.count { have ->
+                            val cleanHave = have.replace(Regex("[0-9]"), "").trim()
+                            recipeIngredients.any { it.contains(cleanHave, ignoreCase = true) }
+                        }
                     }
+
+                    if (iCrave.isNotEmpty()) {
+                        val recipeTags = recipe.tags?.map { it.replace(Regex("[0-9]"), "").trim() } ?: emptyList()
+                        matchCount += iCrave.count { crave ->
+                            val cleanCrave = crave.replace(Regex("[0-9]"), "").trim()
+                            recipeTags.any { it.contains(cleanCrave, ignoreCase = true) }
+                        }
+                    }
+
                     if (matchCount > 0) {
                         recipe to matchCount
+
                     } else {
                         null
                     }
@@ -45,8 +66,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
                 .sortedByDescending { it.second }
                 .map { it.first }
             }
-        }
-        else if (query.isBlank()) {
+        } else if (query.isBlank()) {
             dao.getAllRecipesFlow()
         } else {
             dao.searchIngredientsFlow("%$query%")
@@ -56,6 +76,11 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
 
     fun setIHaveIngredients(ingredients: List<String>) {
         _iHaveIngredients.value = ingredients
+        _searchQuery.value = ""
+    }
+
+    fun setIHaveCravings(tags: List<String>) {
+        _iHaveCravings.value = tags
         _searchQuery.value = ""
     }
 
