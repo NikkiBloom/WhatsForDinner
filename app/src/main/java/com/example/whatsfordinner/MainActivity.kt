@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            WhatsForDinnerTheme {
+            WhatsForDinnerTheme(dynamicColor = false) {
                 val navController = rememberNavController()
                 val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory)
 
@@ -208,12 +208,10 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF8EBEB))
     ) {
         Column(
             modifier = modifier
                 .fillMaxSize(),
-            //.background(Color(0xFFF8EBEB)),
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
@@ -228,7 +226,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
 
             Button(
                 onClick = { navController.navigate("crave") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("I'm Craving...")
             }
@@ -237,7 +235,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
 
             Button(
                 onClick = { navController.navigate("have") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("I Have...")
             }
@@ -249,7 +247,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
                     recipeViewModel.clearSearch()
                     navController.navigate("recipeTinder")
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("I Don't Know (Random)")
             }
@@ -258,7 +256,7 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
 
             Button(
                 onClick = { navController.navigate("recipes") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier.padding(bottom = 40.dp)
             ) {
                 Text("Recipe Book")
@@ -336,7 +334,6 @@ fun RecipeBook(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF8EBEB))
     ) {
 
         Column(
@@ -385,7 +382,7 @@ fun RecipeBook(
         // back button
         Button(
             onClick = { navController.popBackStack() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
@@ -415,7 +412,7 @@ fun NewRecipeCard(onClick: () -> Unit) {
             Text(
                 text = "+ New Recipe",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(0xFF6A2E2E)
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }
@@ -442,7 +439,6 @@ fun NewRecipeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8EBEB))
             .systemBarsPadding()
     ) {
 
@@ -486,7 +482,7 @@ fun NewRecipeScreen(
             // image select button
             Button(
                 onClick = { imagePicker.launch("image/*") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Pick Image")
             }
@@ -536,7 +532,7 @@ fun NewRecipeScreen(
                     navController.popBackStack()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB16565)
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Text("Save Recipe")
@@ -547,7 +543,7 @@ fun NewRecipeScreen(
         Button(
             onClick = { navController.popBackStack() },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFB16565)
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -667,7 +663,7 @@ fun EditRecipeScreen(
                     )
                     navController.popBackStack()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Save Changes")
             }
@@ -693,7 +689,6 @@ fun FullRecipeView(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF8EBEB))
                 .padding(24.dp)
         ) {
 
@@ -762,7 +757,7 @@ fun FullRecipeView(
 
             Button(
                 onClick = { navController.popBackStack() },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(16.dp)
@@ -864,7 +859,7 @@ fun RecipeTinderScreen(
     ) {
         if (currentRecipe == null) {
             Text(
-                text = "Out of recipes 😅",
+                text = "Out of recipes! Try a new search.",
                 style = MaterialTheme.typography.titleMedium
             )
         } else {
@@ -887,7 +882,7 @@ fun RecipeTinderScreen(
         // Back button
         Button(
             onClick = { navController.popBackStack() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB16565)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
@@ -907,7 +902,7 @@ fun IHaveScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8EBEB))
+
     ) {
 
         Column(
@@ -942,7 +937,7 @@ fun IHaveScreen(
                     navController.navigate("recipeTinder")
                           },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB16565)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier
                     .padding(16.dp)
@@ -955,7 +950,7 @@ fun IHaveScreen(
         Button(
             onClick = { navController.popBackStack() },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFB16565)
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             modifier = Modifier
                 .align(Alignment.BottomStart)
