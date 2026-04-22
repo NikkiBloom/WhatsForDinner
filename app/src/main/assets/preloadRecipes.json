@@ -1,13 +1,15 @@
 [
   {
     "title": "Spaghetti",
+    "credit": "Sage F.",
     "imageUri": null,
     "tags": ["Comfort", "Italian"],
     "ingredients": ["Marinara Sauce", "Noodles", "Ground Beef"],
-    "instructions": "1. Boil pasta. 2. Season and cook ground beef in a pan. 3. Combine all."
+    "instructions": "1. Boil pasta. \n2. Season and cook ground beef in a pan. 3. Combine all."
   },
   {
     "title": "Chicken Stir Fry",
+    "credit": "Copilot",
     "imageUri": null,
     "tags": ["Asian", "Healthy", "Fast"],
     "ingredients": ["Chicken Breast", "Broccoli", "Soy Sauce", "Ginger", "Garlic", "Sesame Oil"],
@@ -15,33 +17,31 @@
   },
   {
     "title": "Avocado Toast",
+    "credit": "Copilot",
     "imageUri": null,
     "tags": ["Breakfast", "Vegetarian"],
     "ingredients": ["Sourdough Bread", "Avocado", "Lemon Juice", "Red Pepper Flakes", "Salt"],
     "instructions": "1. Toast bread. 2. Mash avocado with lemon and salt. 3. Spread on toast and top with flakes."
   },
   {
-    "title": "Vegetable Venison or Beef Soup",
+    "title": "Gingerbread Butterscotch Cookies",
+    "credit": "Memes4daysz9 (Struggling Engineers)",
     "imageUri": null,
-    "tags": [
-      "Soup"
-    ],
-    "ingredients": [
-      "1 lb ground venison or beef",
-      "Water",
-      "Tomatoes",
-      "Onion",
-      "Celery",
-      "Carrots",
-      "Beef bouillon",
-      "Barley",
-      "Pepper",
-      "Red pepper flakes"
-    ],
+    "tags": ["Dessert", "Sweet"],
+    "ingredients": ["1 cup butter", "1 1/2 cup brown sugar", "1 egg", "1/3 cup molasses", "2 Tsp baking soda", "1 1/2 Tsp cinnamon", "1 1/2 Tsp ginger", "1 1/2 Tsp salt", "3 cups flour", "1/2 bag butterscotch chips"],
+    "instructions": "Preheat oven to 330f, mix wet ingredients, slowly add dry ingredients, add butterscotch chips, place teaspoon sized dough onto greased baking pan, bake until dough does not appear wet."
+  },
+  {
+    "title": "Vegetable Venison or Beef Soup",
+    "credit": "foodhero.org cookbook",
+    "imageUri": null,
+    "tags": ["Soup"],
+    "ingredients": ["1 lb ground venison or beef", "Water", "Tomatoes", "Onion", "Celery", "Carrots", "Beef bouillon", "Barley", "Pepper", "Red pepper flakes"],
     "instructions": "Brown meat in a stockpot. Add water and tomatoes. Chop and add vegetables, bouillon, spices, and barley. Bring to a boil, reduce heat, and simmer about 30 minutes until vegetables are tender."
   },
   {
     "title": "Roasted Acorn Squash Soup",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -61,6 +61,7 @@
   },
   {
     "title": "Garden Vietnamese Ginger Noodle Soup (Chicken Pho)",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -86,6 +87,7 @@
   },
   {
     "title": "Zucchini and Brown Rice Soup",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -105,6 +107,7 @@
   },
   {
     "title": "Lentil and Chicken Soup",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -124,6 +127,7 @@
   },
   {
     "title": "Veggie Soup",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -140,6 +144,7 @@
   },
   {
     "title": "Butternut Squash Soup",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -160,6 +165,7 @@
   },
   {
     "title": "Fresh Tomato Soup",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Soup",
@@ -183,6 +189,7 @@
   },
   {
     "title": "Summer Beet Salad",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Salad",
@@ -203,6 +210,7 @@
   },
   {
     "title": "Three Bean Salad",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Salad",
@@ -223,6 +231,7 @@
   },
   {
     "title": "Tabbouli",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Salad",
@@ -242,6 +251,7 @@
   },
   {
     "title": "Quinoa Veggie Salad in a Pita",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Salad",
@@ -262,6 +272,7 @@
   },
   {
     "title": "Thai Cucumber Salad",
+    "credit": "foodhero.org cookbook",
     "imageUri": null,
     "tags": [
       "Salad",

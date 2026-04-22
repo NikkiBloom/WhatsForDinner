@@ -2,7 +2,6 @@ package com.example.whatsfordinner.ui.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,17 +40,17 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
                     var matchCount = 0
 
                     if (iHave.isNotEmpty()) {
-                        val recipeIngredients = recipe.ingredients?.map { it.replace(Regex("[0-9]"), "").trim() } ?: emptyList()
+                        val recipeIngredients = recipe.ingredients ?: emptyList()
                         matchCount += iHave.count { have ->
-                            val cleanHave = have.replace(Regex("[0-9]"), "").trim()
+                            val cleanHave = have.trim()
                             recipeIngredients.any { it.contains(cleanHave, ignoreCase = true) }
                         }
                     }
 
                     if (iCrave.isNotEmpty()) {
-                        val recipeTags = recipe.tags?.map { it.replace(Regex("[0-9]"), "").trim() } ?: emptyList()
+                        val recipeTags = recipe.tags ?: emptyList()
                         matchCount += iCrave.count { crave ->
-                            val cleanCrave = crave.replace(Regex("[0-9]"), "").trim()
+                            val cleanCrave = crave.trim()
                             recipeTags.any { it.contains(cleanCrave, ignoreCase = true) }
                         }
                     }
@@ -69,7 +68,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
         } else if (query.isBlank()) {
             dao.getAllRecipesFlow()
         } else {
-            dao.searchIngredientsFlow("%$query%")
+            dao.searchIngredientsFlow(query)
         }
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -91,6 +90,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
 
     fun addRecipe(
         title: String,
+        credit: String?,
         imageUri: String?,
         tags: List<String>,
         ingredients: List<String>,
@@ -100,6 +100,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
             val recipe = Recipe(
                 id = 0, // FTS rowid will be auto-generated
                 title = title,
+                credit = credit,
                 imageUri = imageUri,
                 tags = tags,
                 ingredients = ingredients,

@@ -84,8 +84,42 @@ import com.example.whatsfordinner.ui.theme.RecipeViewModel
 import com.example.whatsfordinner.ui.theme.WhatsForDinnerTheme
 import org.json.JSONArray
 import java.nio.charset.Charset
+import kotlin.String
 
 class MainActivity : ComponentActivity() {
+    private fun preloadRecipes(db: SupportSQLiteDatabase) {
+        try {
+            val inputStream = applicationContext.assets.open("preloadRecipes.json")
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+            val jsonString = String(buffer, Charsets.UTF_8)
+            val jsonArray = JSONArray(jsonString)
+
+            for (i in 0 until jsonArray.length()) {
+                val obj = jsonArray.getJSONObject(i)
+                val title = obj.getString("title")
+                val credit = obj.optString("credit")
+                val imageUri = if (obj.isNull("imageUri")) null else obj.getString("imageUri")
+                val tags = obj.optJSONArray("tags")?.let { arr ->
+                    List(arr.length()) { arr.getString(it) }.joinToString(",")
+                } ?: ""
+                val ingredients = obj.optJSONArray("ingredients")?.let { arr ->
+                    List(arr.length()) { arr.getString(it) }.joinToString(",")
+                } ?: ""
+                val instructions = obj.optString("instructions")
+
+                db.execSQL(
+                    "INSERT INTO recipes (title, credit, imageUri, tags, ingredients, instructions) VALUES (?, ?, ?, ?, ?, ?)",
+                    arrayOf(title, credit, imageUri, tags, ingredients, instructions)
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -98,39 +132,16 @@ class MainActivity : ComponentActivity() {
         val db = Room.databaseBuilder(
             applicationContext,
             RecipeDatabase::class.java, "recipe-database"
-
-        // pre-load from json file:
-        ).addCallback(object : RoomDatabase.Callback() {
+        ).fallbackToDestructiveMigration(true)
+        .addCallback(object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                try {
-                    val inputStream = applicationContext.assets.open("preloadRecipes.json")
-                    val size = inputStream.available()
-                    val buffer = ByteArray(size)
-                    inputStream.read(buffer)
-                    inputStream.close()
-                    val jsonString = String(buffer, Charset.forName("UTF-8"))
-                    val jsonArray = JSONArray(jsonString)
+                preloadRecipes(db)
+            }
 
-                    for (i in 0 until jsonArray.length()) {
-                        val obj = jsonArray.getJSONObject(i)
-                        val title = obj.getString("title")
-                        val tags = obj.getJSONArray("tags").let { arr ->
-                            List(arr.length()) { arr.getString(it) }.joinToString(",")
-                        }
-                        val ingredients = obj.getJSONArray("ingredients").let { arr ->
-                            List(arr.length()) { arr.getString(it) }.joinToString(",")
-                        }
-                        val instructions = obj.getString("instructions")
-
-                        db.execSQL(
-                            "INSERT INTO RecipeDatabase (title, tags, ingredients, instructions) VALUES (?, ?, ?, ?)",
-                            arrayOf(title, tags, ingredients, instructions)
-                        )
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                super.onDestructiveMigration(db)
+                preloadRecipes(db)
             }
         }).build()
 
@@ -437,6 +448,7 @@ fun NewRecipeScreen(
     recipeViewModel: RecipeViewModel = viewModel()
 ) {
     var title by remember { mutableStateOf("") }
+    var credit by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
     var tags by remember { mutableStateOf("") }
     var instructions by remember { mutableStateOf("") }
@@ -491,6 +503,15 @@ fun NewRecipeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            OutlinedTextField(
+                value = credit,
+                onValueChange = { credit = it },
+                label = { Text("Credit") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             // image select button
             Button(
                 onClick = { imagePicker.launch("image/*") },
@@ -533,6 +554,7 @@ fun NewRecipeScreen(
                 onClick = { // todo
                     recipeViewModel.addRecipe(
                         title = title,
+                        credit = credit,
                         imageUri = null,
                         tags = emptyList(),
                         ingredients = ingredients
@@ -580,6 +602,7 @@ fun EditRecipeScreen(
     recipe?.let { existing ->
 
         var title by remember { mutableStateOf(existing.title) }
+        var credit by remember { mutableStateOf(existing.credit) }
         var ingredients by remember { mutableStateOf(existing.ingredients.joinToString(", ")) }
         var tags by remember { mutableStateOf(existing.tags.joinToString(", ")) }
         var instructions by remember { mutableStateOf(existing.instructions) }
@@ -629,6 +652,10 @@ fun EditRecipeScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(title, { title = it }, label = { Text("Title") })
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            credit?.let { it1 -> OutlinedTextField(it1, { credit = it }, label = { Text("Credit") }) }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -730,6 +757,15 @@ fun FullRecipeView(
                     text = existing.title,
                     style = MaterialTheme.typography.headlineMedium
                 )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                existing.credit?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 

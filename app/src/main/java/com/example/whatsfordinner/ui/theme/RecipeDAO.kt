@@ -19,15 +19,15 @@ interface RecipeDAO {
     @Delete
     suspend fun deleteRecipe(recipe: Recipe)
 
-    @Query("SELECT rowid, * FROM RecipeDatabase WHERE rowid = :id")
+    @Query("SELECT rowid, * FROM recipes WHERE rowid = :id")
     suspend fun getRecipeById(id: Int): Recipe
 
-    @Query("SELECT rowid AS id, * FROM RecipeDatabase")
+    @Query("SELECT rowid AS id, * FROM recipes")
     fun getAllRecipesFlow(): Flow<List<RecipeTuple>>
 
-    @Query("SELECT rowid AS id, * FROM RecipeDatabase WHERE ingredients LIKE :query")
+    @Query("SELECT rowid AS id, * FROM recipes WHERE recipes MATCH :query")
     fun searchIngredientsFlow(query: String): Flow<List<RecipeTuple>>
 
-    @Query("SELECT rowid AS id, * FROM RecipeDatabase")
+    @Query("SELECT rowid AS id, * FROM recipes")
     fun getBook(): List<RecipeTuple>
 }
