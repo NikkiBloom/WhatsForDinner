@@ -232,17 +232,26 @@ fun MainScreen(navController: NavController, recipeViewModel: RecipeViewModel, m
         modifier = modifier
             .fillMaxSize()
     ) {
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/background.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(
-                text = "What's For Dinner?",
-                style = MaterialTheme.typography.displayMedium
+            Image(
+                painter = rememberAsyncImagePainter("file:///android_asset/WhatsForDinnerTitle.png"),
+                contentDescription = "What's For Dinner?",
+                modifier = Modifier.fillMaxWidth(0.8f),
+                contentScale = ContentScale.Fit
             )
 
             Spacer(modifier = Modifier.height(150.dp))
@@ -318,7 +327,7 @@ fun RecipeCard(recipe: RecipeTuple, onClick: () -> Unit) {
 
                 Text(
                     text = recipe.title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.displaySmall
                 )
 
                 if (recipe.tags?.isNotEmpty() == true) {
@@ -366,7 +375,7 @@ fun RecipeBook(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
             Text(
                 text = "Recipe Book",
@@ -375,7 +384,6 @@ fun RecipeBook(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            //todo
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = recipeViewModel::onSearchQueryChange,
@@ -475,7 +483,7 @@ fun NewRecipeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
             Text(
                 text = "New Recipe",
@@ -636,7 +644,7 @@ fun EditRecipeScreen(
                     .padding(bottom = 80.dp)
             ) {
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
             Text(
                 text = "Edit Recipe",
@@ -794,7 +802,7 @@ fun FullRecipeView(
 
                 Text(
                     text = existing.title,
-                    style = MaterialTheme.typography.headlineMedium
+                    style = MaterialTheme.typography.displayMedium
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -884,7 +892,7 @@ fun TinderCard(recipe: RecipeTuple) {
 
             Text(
                 text = recipe.title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.displayMedium,
                 fontSize = 25.sp
             )
         }
