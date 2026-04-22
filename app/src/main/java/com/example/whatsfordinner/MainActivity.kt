@@ -469,7 +469,9 @@ fun NewRecipeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .padding(bottom = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -549,28 +551,34 @@ fun NewRecipeScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
+        }
 
-            Button(
-                onClick = { // todo
-                    recipeViewModel.addRecipe(
-                        title = title,
-                        credit = credit,
-                        imageUri = null,
-                        tags = emptyList(),
-                        ingredients = ingredients
-                            .split(",")
-                            .map { it.trim() }
-                            .filter { it.isNotBlank() },
-                        instructions = instructions
-                    )
-                    navController.popBackStack()
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+        Button(
+            onClick = {
+                recipeViewModel.addRecipe(
+                    title = title,
+                    credit = credit,
+                    imageUri = imageUri?.toString(),
+                    tags = tags
+                        .split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() },
+                    ingredients = ingredients
+                        .split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() },
+                    instructions = instructions
                 )
-            ) {
-                Text("Save Recipe")
-            }
+                navController.popBackStack()
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text("Save Recipe")
         }
 
         // back button
@@ -614,11 +622,19 @@ fun EditRecipeScreen(
             imageUri = uri
         }
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                // todo
+                .systemBarsPadding()
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+                    .padding(bottom = 80.dp)
+            ) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -655,7 +671,12 @@ fun EditRecipeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            credit?.let { it1 -> OutlinedTextField(it1, { credit = it }, label = { Text("Credit") }) }
+            credit?.let { it1 ->
+                OutlinedTextField(
+                    it1,
+                    { credit = it },
+                    label = { Text("Credit") })
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -683,12 +704,27 @@ fun EditRecipeScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // back button
+            Button(
+                onClick = { navController.popBackStack() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            ) {
+                Text("Back")
+            }
 
             Button(
                 onClick = {
                     recipeViewModel.updateRecipe(
                         existing.copy(
                             title = title,
+                            credit = credit,
                             imageUri = imageUri?.toString(),
                             ingredients = ingredients
                                 .split(",")
@@ -703,6 +739,9 @@ fun EditRecipeScreen(
                     )
                     navController.popBackStack()
                 },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Save Changes")
@@ -958,7 +997,9 @@ fun IHaveScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .padding(bottom = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -1026,7 +1067,9 @@ fun ICraveScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .padding(bottom = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 

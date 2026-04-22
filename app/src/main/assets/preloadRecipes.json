@@ -34,7 +34,7 @@
   {
     "title": "Vegetable Venison or Beef Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/VegetableVenisonSoup.png",
     "tags": ["Soup"],
     "ingredients": ["1 lb ground venison or beef", "Water", "Tomatoes", "Onion", "Celery", "Carrots", "Beef bouillon", "Barley", "Pepper", "Red pepper flakes"],
     "instructions": "Brown meat in a stockpot. Add water and tomatoes. Chop and add vegetables, bouillon, spices, and barley. Bring to a boil, reduce heat, and simmer about 30 minutes until vegetables are tender."
@@ -42,7 +42,7 @@
   {
     "title": "Roasted Acorn Squash Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/RoastedAcornSquashSoup.png",
     "tags": [
       "Soup",
       "Vegetarian"
@@ -62,7 +62,7 @@
   {
     "title": "Garden Vietnamese Ginger Noodle Soup (Chicken Pho)",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/ChickenPho.png",
     "tags": [
       "Soup",
       "Asian"
@@ -88,7 +88,7 @@
   {
     "title": "Zucchini and Brown Rice Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/ZucchiniBrownRiceSoup.png",
     "tags": [
       "Soup",
       "Vegetarian"
@@ -108,7 +108,7 @@
   {
     "title": "Lentil and Chicken Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/LentilAndChickenSoup.png",
     "tags": [
       "Soup",
       "Gluten-Free"
@@ -128,7 +128,7 @@
   {
     "title": "Veggie Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/VeggieSoup.png",
     "tags": [
       "Soup",
       "Vegan"
@@ -145,7 +145,7 @@
   {
     "title": "Butternut Squash Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/ButternutSquashSoup.png",
     "tags": [
       "Soup",
       "Vegetarian"
@@ -166,7 +166,7 @@
   {
     "title": "Fresh Tomato Soup",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/FreshTomatoSoup.png",
     "tags": [
       "Soup",
       "Vegetarian"
@@ -211,7 +211,7 @@
   {
     "title": "Three Bean Salad",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/ThreeBeanSalad.png",
     "tags": [
       "Salad",
       "Vegan"
@@ -232,7 +232,7 @@
   {
     "title": "Tabbouli",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/Tabbouli.png",
     "tags": [
       "Salad",
       "Vegan"
@@ -252,7 +252,7 @@
   {
     "title": "Quinoa Veggie Salad in a Pita",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/QuinoaVeggieSalad.png",
     "tags": [
       "Salad",
       "Vegetarian"
@@ -273,7 +273,7 @@
   {
     "title": "Thai Cucumber Salad",
     "credit": "foodhero.org cookbook",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/ThaiCucumberSalad.png",
     "tags": [
       "Salad",
       "Vegetarian"
