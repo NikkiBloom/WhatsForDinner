@@ -2,26 +2,10 @@
   {
     "title": "Spaghetti",
     "credit": "Sage F.",
-    "imageUri": null,
+    "imageUri": "file:///android_asset/RealSpaghetti.png",
     "tags": ["Comfort", "Italian"],
     "ingredients": ["Marinara Sauce", "Noodles", "Ground Beef"],
     "instructions": "1. Boil pasta. \n2. Season and cook ground beef in a pan. 3. Combine all."
-  },
-  {
-    "title": "Chicken Stir Fry",
-    "credit": "Copilot",
-    "imageUri": null,
-    "tags": ["Asian", "Healthy", "Fast"],
-    "ingredients": ["Chicken Breast", "Broccoli", "Soy Sauce", "Ginger", "Garlic", "Sesame Oil"],
-    "instructions": "1. Slice chicken and veggies. 2. Sauté chicken until browned. 3. Add veggies and sauce. 4. Serve over rice."
-  },
-  {
-    "title": "Avocado Toast",
-    "credit": "Copilot",
-    "imageUri": null,
-    "tags": ["Breakfast", "Vegetarian"],
-    "ingredients": ["Sourdough Bread", "Avocado", "Lemon Juice", "Red Pepper Flakes", "Salt"],
-    "instructions": "1. Toast bread. 2. Mash avocado with lemon and salt. 3. Spread on toast and top with flakes."
   },
   {
     "title": "Gingerbread Butterscotch Cookies",

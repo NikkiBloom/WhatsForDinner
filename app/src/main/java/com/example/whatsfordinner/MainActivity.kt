@@ -178,14 +178,22 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(
-                        route = "fullRecipe/{recipeId}",
-                        arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                        route = "fullRecipe/{recipeId}?canEdit={canEdit}",
+                        arguments = listOf(
+                            navArgument("recipeId") { type = NavType.IntType },
+                            navArgument("canEdit") {
+                                type = NavType.BoolType
+                                defaultValue = false
+                            }
+                        )
                     ) { backStackEntry ->
                         val recipeId = backStackEntry.arguments!!.getInt("recipeId")
+                        val canEdit = backStackEntry.arguments!!.getBoolean("canEdit")
                         FullRecipeView(
                             navController = navController,
                             recipeId = recipeId,
-                            recipeViewModel = recipeViewModel
+                            recipeViewModel = recipeViewModel,
+                            canEdit = canEdit
                         )
                     }
 
@@ -309,6 +317,13 @@ fun RecipeCard(recipe: RecipeTuple, onClick: () -> Unit) {
             containerColor = Color.White
         )
     ) {
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/pinkPaperTexture.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
         Row(modifier = Modifier.padding(16.dp).height(IntrinsicSize.Min)) {
 
             recipe.imageUri?.let { uri ->
@@ -367,6 +382,12 @@ fun RecipeBook(
         modifier = modifier
             .fillMaxSize()
     ) {
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/background.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
         Column(
             modifier = Modifier
@@ -379,7 +400,7 @@ fun RecipeBook(
 
             Text(
                 text = "Recipe Book",
-                style = MaterialTheme.typography.displaySmall
+                style = MaterialTheme.typography.displayMedium
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -404,7 +425,7 @@ fun RecipeBook(
                 }
                 items(recipes) { recipe ->
                     RecipeCard(recipe) {
-                        navController.navigate("editRecipe/${recipe.id}")
+                        navController.navigate("fullRecipe/${recipe.id}?canEdit=true")
                     }
                 }
             }
@@ -442,7 +463,7 @@ fun NewRecipeCard(onClick: () -> Unit) {
         ) {
             Text(
                 text = "+ New Recipe",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.secondary
             )
         }
@@ -474,6 +495,13 @@ fun NewRecipeScreen(
             .systemBarsPadding()
     ) {
 
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/pinkPaperTexture.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -487,7 +515,7 @@ fun NewRecipeScreen(
 
             Text(
                 text = "New Recipe",
-                style = MaterialTheme.typography.displaySmall
+                style = MaterialTheme.typography.displayMedium
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -633,9 +661,16 @@ fun EditRecipeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                // todo
                 .systemBarsPadding()
         ) {
+
+            Image(
+                painter = rememberAsyncImagePainter("file:///android_asset/pinkPaperTexture.png"),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -648,7 +683,7 @@ fun EditRecipeScreen(
 
             Text(
                 text = "Edit Recipe",
-                style = MaterialTheme.typography.displaySmall
+                style = MaterialTheme.typography.displayMedium
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -763,7 +798,8 @@ fun EditRecipeScreen(
 fun FullRecipeView(
     navController: NavController,
     recipeId: Int,
-    recipeViewModel: RecipeViewModel
+    recipeViewModel: RecipeViewModel,
+    canEdit: Boolean = false
 ) {
     val recipe by recipeViewModel
         .getRecipe(recipeId)
@@ -776,89 +812,120 @@ fun FullRecipeView(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .systemBarsPadding()
         ) {
 
-            Column(
+            Image(
+                painter = rememberAsyncImagePainter("file:///android_asset/pinkPaperTexture.png"),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(12.dp)
+                    .padding(24.dp)
             ) {
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(12.dp)
+                ) {
 
-                existing.imageUri?.let { uri ->
-                    Image(
-                        painter = rememberAsyncImagePainter(Uri.parse(uri)),
-                        contentDescription = existing.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(3f / 4f),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = existing.title,
-                    style = MaterialTheme.typography.displayMedium
-                )
+                    existing.imageUri?.let { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(Uri.parse(uri)),
+                            contentDescription = existing.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(3f / 4f),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                existing.credit?.let {
                     Text(
-                        text = it,
+                        text = existing.title,
+                        style = MaterialTheme.typography.displayMedium
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    existing.credit?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Ingredients",
                         style = MaterialTheme.typography.titleMedium
                     )
+                    Text(
+                        text = existing.ingredients.joinToString(", "),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Flavor Profile",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = existing.tags.joinToString(", "),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Instructions",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = existing.instructions,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    // Space so content doesn't hide behind button
+                    Spacer(modifier = Modifier.height(80.dp))
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Ingredients",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = existing.ingredients.joinToString(", "),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Flavor Profile",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = existing.tags.joinToString(", "),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Instructions",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = existing.instructions,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                // Space so content doesn't hide behind button
-                Spacer(modifier = Modifier.height(80.dp))
             }
 
+            // back button
             Button(
                 onClick = { navController.popBackStack() },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(16.dp)
             ) {
                 Text("Back")
+            }
+
+            if (canEdit) {
+                Button(
+                    onClick = { navController.navigate("editRecipe/$recipeId") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                ) {
+                    Text("Edit")
+                }
             }
         }
     }
@@ -954,6 +1021,13 @@ fun RecipeTinderScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/background.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
         if (currentRecipe == null) {
             Text(
                 text = "Out of recipes! Try a new search.",
@@ -1002,6 +1076,13 @@ fun IHaveScreen(
 
     ) {
 
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/background.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -1015,7 +1096,7 @@ fun IHaveScreen(
 
             Text(
                 text = "I Have...",
-                style = MaterialTheme.typography.displaySmall
+                style = MaterialTheme.typography.displayMedium
             )
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -1071,6 +1152,12 @@ fun ICraveScreen(
             .fillMaxSize()
 
     ) {
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/background.png"),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
         Column(
             modifier = Modifier
@@ -1085,7 +1172,7 @@ fun ICraveScreen(
 
             Text(
                 text = "I'm Craving...",
-                style = MaterialTheme.typography.displaySmall
+                style = MaterialTheme.typography.displayMedium
             )
 
             Spacer(modifier = Modifier.height(48.dp))
