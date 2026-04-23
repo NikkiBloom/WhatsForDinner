@@ -355,12 +355,6 @@ fun RecipeCard(recipe: RecipeTuple, onClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                recipe.ingredients?.let {
-                    Text(
-                        text = it.joinToString(", "),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
             }
         }
     }

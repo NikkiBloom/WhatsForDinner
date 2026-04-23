@@ -5,7 +5,7 @@
     "imageUri": "file:///android_asset/RealSpaghetti.png",
     "tags": ["Comfort", "Italian"],
     "ingredients": ["Marinara Sauce", "Noodles", "Ground Beef"],
-    "instructions": "1. Boil pasta. \n2. Season and cook ground beef in a pan. 3. Combine all."
+    "instructions": "\n1. Boil pasta.\n2. Season and cook ground beef in a pan.\n3. Combine all."
   },
   {
     "title": "Gingerbread Butterscotch Cookies",
@@ -13,7 +13,7 @@
     "imageUri": null,
     "tags": ["Dessert", "Sweet"],
     "ingredients": ["1 cup butter", "1 1/2 cup brown sugar", "1 egg", "1/3 cup molasses", "2 Tsp baking soda", "1 1/2 Tsp cinnamon", "1 1/2 Tsp ginger", "1 1/2 Tsp salt", "3 cups flour", "1/2 bag butterscotch chips"],
-    "instructions": "Preheat oven to 330f, mix wet ingredients, slowly add dry ingredients, add butterscotch chips, place teaspoon sized dough onto greased baking pan, bake until dough does not appear wet."
+    "instructions": "\nPreheat oven to 330f.\nMix wet ingredients.\nSlowly add dry ingredients.\nAdd butterscotch chips.\nPlace teaspoon sized dough onto greased baking pan.\nBake until dough does not appear wet."
   },
   {
     "title": "Vegetable Venison or Beef Soup",
@@ -21,257 +21,102 @@
     "imageUri": "file:///android_asset/VegetableVenisonSoup.png",
     "tags": ["Soup"],
     "ingredients": ["1 lb ground venison or beef", "Water", "Tomatoes", "Onion", "Celery", "Carrots", "Beef bouillon", "Barley", "Pepper", "Red pepper flakes"],
-    "instructions": "Brown meat in a stockpot. Add water and tomatoes. Chop and add vegetables, bouillon, spices, and barley. Bring to a boil, reduce heat, and simmer about 30 minutes until vegetables are tender."
+    "instructions": "\nBrown meat in a stockpot.\nAdd water and tomatoes.\nChop and add vegetables, bouillon, spices, and barley.\nBring to a boil, reduce heat, and simmer about 30 minutes until vegetables are tender."
   },
   {
     "title": "Roasted Acorn Squash Soup",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/RoastedAcornSquashSoup.png",
-    "tags": [
-      "Soup",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Acorn squash",
-      "Butter",
-      "Celery",
-      "Carrots",
-      "Onion",
-      "Chicken or vegetable broth",
-      "Heavy cream",
-      "Lemon juice"
-    ],
-    "instructions": "Roast halved squash until soft. Saut\u00e9 celery, carrots, and onion in butter. Scoop squash flesh into pan with broth and simmer 25\u201330 minutes. Blend until smooth, then stir in cream and lemon juice and season."
+    "tags": ["Soup", "Vegetarian"],
+    "ingredients": ["Acorn squash", "Butter", "Celery", "Carrots", "Onion", "Chicken or vegetable broth", "Heavy cream", "Lemon juice"],
+    "instructions": "\nRoast halved squash until soft.\nSauté celery, carrots, and onion in butter.\nScoop squash flesh into pan with broth and simmer 25–30 minutes.\nBlend until smooth, then stir in cream and lemon juice and season."
   },
   {
     "title": "Garden Vietnamese Ginger Noodle Soup (Chicken Pho)",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/ChickenPho.png",
-    "tags": [
-      "Soup",
-      "Asian"
-    ],
-    "ingredients": [
-      "Chicken thighs",
-      "Carrots",
-      "Broccoli",
-      "Vermicelli noodles",
-      "Onion",
-      "Garlic",
-      "Ginger",
-      "Star anise",
-      "Cloves",
-      "Broth",
-      "Soy sauce",
-      "Lime juice",
-      "Cilantro",
-      "Basil"
-    ],
-    "instructions": "Saut\u00e9 onion and garlic in oil. Brown chicken with carrots and broccoli. Add broth, soy sauce, lime juice, ginger, and whole spices and simmer about 30 minutes. Cook noodles separately. Serve soup over noodles with herbs and lime."
+    "tags": ["Soup", "Asian"],
+    "ingredients": ["Chicken thighs", "Carrots", "Broccoli", "Vermicelli noodles", "Onion", "Garlic", "Ginger", "Star anise", "Cloves", "Broth", "Soy sauce", "Lime juice", "Cilantro", "Basil"],
+    "instructions": "\nSauté onion and garlic in oil.\nBrown chicken with carrots and broccoli.\nAdd broth, soy sauce, lime juice, ginger, and whole spices and simmer about 30 minutes.\nCook noodles separately.\nServe soup over noodles with herbs and lime."
   },
   {
     "title": "Zucchini and Brown Rice Soup",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/ZucchiniBrownRiceSoup.png",
-    "tags": [
-      "Soup",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Zucchini",
-      "Spinach or Swiss chard",
-      "Brown rice",
-      "Onion",
-      "Butter",
-      "Chicken or vegetable broth",
-      "Salt",
-      "Pepper"
-    ],
-    "instructions": "Cook rice in broth until tender. Saut\u00e9 onion in butter, add zucchini briefly, then greens until wilted. Stir vegetable mixture into rice, season, and serve warm."
+    "tags": ["Soup", "Vegetarian"],
+    "ingredients": ["Zucchini", "Spinach or Swiss chard", "Brown rice", "Onion", "Butter", "Chicken or vegetable broth", "Salt", "Pepper"],
+    "instructions": "\nCook rice in broth until tender.\nSauté onion in butter, add zucchini briefly, then greens until wilted.\nStir vegetable mixture into rice, season, and serve warm."
   },
   {
     "title": "Lentil and Chicken Soup",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/LentilAndChickenSoup.png",
-    "tags": [
-      "Soup",
-      "Gluten-Free"
-    ],
-    "ingredients": [
-      "Chicken breast",
-      "Brown lentils",
-      "Tomatoes",
-      "Onion",
-      "Garlic",
-      "Chicken broth",
-      "Oil",
-      "Cilantro"
-    ],
-    "instructions": "Cook tomatoes, onion, and garlic in pot. Add oil, broth, and chicken and bring to a boil. Add lentils and simmer until lentils are tender and chicken cooked. Shred chicken before serving."
+    "tags": ["Soup", "Gluten-Free"],
+    "ingredients": ["Chicken breast", "Brown lentils", "Tomatoes", "Onion", "Garlic", "Chicken broth", "Oil", "Cilantro"],
+    "instructions": "\nCook tomatoes, onion, and garlic in pot.\nAdd oil, broth, and chicken and bring to a boil.\nAdd lentils and simmer until lentils are tender and chicken cooked.\nShred chicken before serving."
   },
   {
     "title": "Veggie Soup",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/VeggieSoup.png",
-    "tags": [
-      "Soup",
-      "Vegan"
-    ],
-    "ingredients": [
-      "Mixed vegetables",
-      "Broth or water",
-      "Salt",
-      "Pepper",
-      "Herbs"
-    ],
-    "instructions": "Chop vegetables and roast until soft. Transfer to pot with broth or water. Blend if desired and season to taste."
+    "tags": ["Soup", "Vegan"],
+    "ingredients": ["Mixed vegetables", "Broth or water", "Salt", "Pepper", "Herbs"],
+    "instructions": "\nChop vegetables and roast until soft.\nTransfer to pot with broth or water.\nBlend if desired and season to taste."
   },
   {
     "title": "Butternut Squash Soup",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/ButternutSquashSoup.png",
-    "tags": [
-      "Soup",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Butternut squash",
-      "Apple",
-      "Sweet onion",
-      "Vegetable broth",
-      "Milk",
-      "Curry powder",
-      "Cinnamon",
-      "Salt",
-      "Oil"
-    ],
-    "instructions": "Roast seasoned squash until tender. Saut\u00e9 apple and onion in oil. Add squash, broth, and milk, simmer 20 minutes, then blend until smooth."
+    "tags": ["Soup", "Vegetarian"],
+    "ingredients": ["Butternut squash", "Apple", "Sweet onion", "Vegetable broth", "Milk", "Curry powder", "Cinnamon", "Salt", "Oil"],
+    "instructions": "\nRoast seasoned squash until tender.\nSauté apple and onion in oil.\nAdd squash, broth, and milk, simmer 20 minutes.\nBlend until smooth."
   },
   {
     "title": "Fresh Tomato Soup",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/FreshTomatoSoup.png",
-    "tags": [
-      "Soup",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Tomatoes",
-      "Onion",
-      "Leeks",
-      "Carrots",
-      "Celery",
-      "Garlic",
-      "Broth",
-      "Flour",
-      "Oil",
-      "Parsley",
-      "Salt",
-      "Pepper"
-    ],
-    "instructions": "Saut\u00e9 onions and leeks, add vegetables and cook until thick. Stir in flour, then add broth and simmer. Add parsley and season; blend if desired."
+    "tags": ["Soup", "Vegetarian"],
+    "ingredients": ["Tomatoes", "Onion", "Leeks", "Carrots", "Celery", "Garlic", "Broth", "Flour", "Oil", "Parsley", "Salt", "Pepper"],
+    "instructions": "\nSauté onions and leeks.\nAdd vegetables and cook until thick.\nStir in flour, then add broth and simmer.\nAdd parsley and season.\nBlend if desired."
   },
   {
     "title": "Summer Beet Salad",
     "credit": "foodhero.org cookbook",
     "imageUri": null,
-    "tags": [
-      "Salad",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Beets",
-      "Walnuts",
-      "Orange juice",
-      "Vinegar",
-      "Olive oil",
-      "Scallions",
-      "Blue cheese or feta",
-      "Salt",
-      "Pepper"
-    ],
-    "instructions": "Boil beets until tender, peel and slice. Toast walnuts. Whisk dressing ingredients. Toss beets with dressing, walnuts, scallions, and cheese."
+    "tags": ["Salad", "Vegetarian"],
+    "ingredients": ["Beets", "Walnuts", "Orange juice", "Vinegar", "Olive oil", "Scallions", "Blue cheese or feta", "Salt", "Pepper"],
+    "instructions": "\nBoil beets until tender, peel and slice.\nToast walnuts.\nWhisk dressing ingredients.\nToss beets with dressing, walnuts, scallions, and cheese."
   },
   {
     "title": "Three Bean Salad",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/ThreeBeanSalad.png",
-    "tags": [
-      "Salad",
-      "Vegan"
-    ],
-    "ingredients": [
-      "Yellow wax beans",
-      "Green beans",
-      "Kidney beans",
-      "Onion",
-      "Green pepper",
-      "Cauliflower",
-      "Vinegar",
-      "Sugar",
-      "Oil"
-    ],
-    "instructions": "Drain beans and combine with chopped vegetables. Whisk vinegar, sugar, and oil and pour over salad. Toss well and chill or serve at room temperature."
+    "tags": ["Salad", "Vegan"],
+    "ingredients": ["Yellow wax beans", "Green beans", "Kidney beans", "Onion", "Green pepper", "Cauliflower", "Vinegar", "Sugar", "Oil"],
+    "instructions": "\nDrain beans and combine with chopped vegetables.\nWhisk vinegar, sugar, and oil and pour over salad.\nToss well and chill or serve at room temperature."
   },
   {
     "title": "Tabbouli",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/Tabbouli.png",
-    "tags": [
-      "Salad",
-      "Vegan"
-    ],
-    "ingredients": [
-      "Bulgur wheat",
-      "Tomatoes",
-      "Parsley",
-      "Green onions",
-      "Lemon juice",
-      "Olive oil",
-      "Salt",
-      "Mint"
-    ],
-    "instructions": "Soak bulgur in hot water, then drain and squeeze dry. Mix vegetables with lemon juice and salt, add bulgur, chill, then stir in olive oil and mint before serving."
+    "tags": ["Salad", "Vegan"],
+    "ingredients": ["Bulgur wheat", "Tomatoes", "Parsley", "Green onions", "Lemon juice", "Olive oil", "Salt", "Mint"],
+    "instructions": "\nSoak bulgur in hot water, then drain and squeeze dry.\nMix vegetables with lemon juice and salt.\nAdd bulgur and chill.\nStir in olive oil and mint before serving."
   },
   {
     "title": "Quinoa Veggie Salad in a Pita",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/QuinoaVeggieSalad.png",
-    "tags": [
-      "Salad",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Cooked quinoa",
-      "Chickpeas",
-      "Green onion",
-      "Asparagus",
-      "Carrot",
-      "Bell pepper",
-      "Fresh herbs",
-      "Pita",
-      "Orange miso dressing"
-    ],
-    "instructions": "Cook quinoa if needed. Whisk dressing ingredients. Toss all vegetables and quinoa with dressing. Fill pita halves and serve."
+    "tags": ["Salad", "Vegetarian"],
+    "ingredients": ["Cooked quinoa", "Chickpeas", "Green onion", "Asparagus", "Carrot", "Bell pepper", "Fresh herbs", "Pita", "Orange miso dressing"],
+    "instructions": "\nCook quinoa if needed.\nWhisk dressing ingredients.\nToss all vegetables and quinoa with dressing.\nFill pita halves and serve."
   },
   {
     "title": "Thai Cucumber Salad",
     "credit": "foodhero.org cookbook",
     "imageUri": "file:///android_asset/ThaiCucumberSalad.png",
-    "tags": [
-      "Salad",
-      "Vegetarian"
-    ],
-    "ingredients": [
-      "Cucumbers",
-      "Green onions",
-      "Peanuts",
-      "Rice vinegar",
-      "Sugar",
-      "Olive oil",
-      "Salt",
-      "Red pepper flakes"
-    ],
-    "instructions": "Whisk vinegar, sugar, oil, salt, and pepper flakes. Add sliced cucumbers, peanuts, and green onions. Toss and serve chilled."
+    "tags": ["Salad", "Vegetarian"],
+    "ingredients": ["Cucumbers", "Green onions", "Peanuts", "Rice vinegar", "Sugar", "Olive oil", "Salt", "Red pepper flakes"],
+    "instructions": "\nWhisk vinegar, sugar, oil, salt, and pepper flakes.\nAdd sliced cucumbers, peanuts, and green onions.\nToss and serve chilled."
   }
 ]
