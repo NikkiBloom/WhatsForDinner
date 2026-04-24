@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+// functional model for recipes, including search functions used in MainActivity.kt
 class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -39,6 +40,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
                 allRecipes.mapNotNull { recipe ->
                     var matchCount = 0
 
+                    // "I have..." search
                     if (iHave.isNotEmpty()) {
                         val recipeIngredients = recipe.ingredients ?: emptyList()
                         matchCount += iHave.count { have ->
@@ -47,6 +49,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
                         }
                     }
 
+                    //"I crave..." search
                     if (iCrave.isNotEmpty()) {
                         val recipeTags = recipe.tags ?: emptyList()
                         matchCount += iCrave.count { crave ->
@@ -55,6 +58,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
                         }
                     }
 
+                    // sort by occurences
                     if (matchCount > 0) {
                         recipe to matchCount
 
@@ -88,6 +92,7 @@ class RecipeViewModel(private val dao: RecipeDAO) : ViewModel() {
         _iHaveIngredients.value = emptyList()
     }
 
+    // add recipe, used in NewRecipeScreen
     fun addRecipe(
         title: String,
         credit: String?,

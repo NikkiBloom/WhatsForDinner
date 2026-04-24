@@ -14,7 +14,7 @@ val CutesyFontFamily = FontFamily(
     Font(R.font.cutesy, FontWeight.Bold)
 )
 
-// Set of Material typography styles to start with
+// Typography styles. primarily dictates normal font or cutesy font
 val Typography = Typography(
     displayMedium = TextStyle(
         fontFamily = CutesyFontFamily,

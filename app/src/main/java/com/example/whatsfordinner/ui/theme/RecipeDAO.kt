@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+// data access object for database
 @Dao
 interface RecipeDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

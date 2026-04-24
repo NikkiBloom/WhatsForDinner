@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -44,9 +43,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -76,17 +73,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import coil.compose.rememberAsyncImagePainter
-import com.example.whatsfordinner.ui.theme.Recipe
 import com.example.whatsfordinner.ui.theme.RecipeDAO
 import com.example.whatsfordinner.ui.theme.RecipeDatabase
 import com.example.whatsfordinner.ui.theme.RecipeTuple
 import com.example.whatsfordinner.ui.theme.RecipeViewModel
 import com.example.whatsfordinner.ui.theme.WhatsForDinnerTheme
 import org.json.JSONArray
-import java.nio.charset.Charset
-import kotlin.String
 
 class MainActivity : ComponentActivity() {
+    // pre-load .json recipes into the app
     private fun preloadRecipes(db: SupportSQLiteDatabase) {
         try {
             val inputStream = applicationContext.assets.open("preloadRecipes.json")
@@ -97,6 +92,7 @@ class MainActivity : ComponentActivity() {
             val jsonString = String(buffer, Charsets.UTF_8)
             val jsonArray = JSONArray(jsonString)
 
+            // pull recipes from .json into the database
             for (i in 0 until jsonArray.length()) {
                 val obj = jsonArray.getJSONObject(i)
                 val title = obj.getString("title")
@@ -110,12 +106,13 @@ class MainActivity : ComponentActivity() {
                 } ?: ""
                 val instructions = obj.optString("instructions")
 
+                // insert into database
                 db.execSQL(
                     "INSERT INTO recipes (title, credit, imageUri, tags, ingredients, instructions) VALUES (?, ?, ?, ?, ?, ?)",
                     arrayOf(title, credit, imageUri, tags, ingredients, instructions)
                 )
             }
-        } catch (e: Exception) {
+        } catch (e: Exception) { // err
             e.printStackTrace()
         }
     }
@@ -129,6 +126,7 @@ class MainActivity : ComponentActivity() {
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
+        // setup database in room
         val db = Room.databaseBuilder(
             applicationContext,
             RecipeDatabase::class.java, "recipe-database"
@@ -155,6 +153,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory)
 
+                // set-up nav screens
                 NavHost(navController = navController, startDestination = "main") {
                     composable("main") {
                         MainScreen(
@@ -583,6 +582,7 @@ fun NewRecipeScreen(
             Spacer(modifier = Modifier.height(24.dp))
         }
 
+        // save values into new recipe
         Button(
             onClick = {
                 recipeViewModel.addRecipe(
@@ -756,6 +756,7 @@ fun EditRecipeScreen(
                 Text("Back")
             }
 
+            // save recipe
             Button(
                 onClick = {
                     recipeViewModel.updateRecipe(
@@ -908,6 +909,7 @@ fun FullRecipeView(
                 Text("Back")
             }
 
+            // display an "edit" button if coming from recipe book nav
             if (canEdit) {
                 Button(
                     onClick = { navController.navigate("editRecipe/$recipeId") },
@@ -986,6 +988,7 @@ fun TinderButtons(
     }
 }
 
+// heart of recipe tinder. display recipe title and image, link to other navs
 @Composable
 fun RecipeTinderScreen(
     recipeViewModel: RecipeViewModel,
@@ -1057,6 +1060,7 @@ fun RecipeTinderScreen(
     }
 }
 
+// navigable screen to select ingredients for "I Have" search
 @Composable
 fun IHaveScreen(
     recipeViewModel: RecipeViewModel = viewModel(),
@@ -1135,6 +1139,7 @@ fun IHaveScreen(
     }
 }
 
+// navigable screen for searching recipes by tags
 @Composable
 fun ICraveScreen(
     recipeViewModel: RecipeViewModel,
